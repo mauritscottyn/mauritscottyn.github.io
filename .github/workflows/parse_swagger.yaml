@@ -16,9 +16,11 @@ jobs:
       - name: install
         run: |
           npm install
+          npm install -g redoc-cli
       - name: build-html
         run: |
           npm run build
+          redoc-cli bundle -o index.html dist.yaml
       - name: git actions
         run: |
           git config user.email "cottynmaurits@gmail.com"
