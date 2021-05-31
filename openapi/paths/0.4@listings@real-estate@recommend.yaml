@@ -1,0 +1,44 @@
+post:
+  tags:
+    - Real Estate Listings
+  summary: Retrieve a recommendations by ids
+  description: Retrieve a recommendations matching the given listing_ids.
+  operationId: post_recommend
+  parameters:
+    - name: score_threshold
+      in: query
+      description: Threshold above which recommendations are given
+      schema:
+        type: number
+        default: 0.5
+    - name: full_listing
+      in: query
+      description: Whether the result is the listing id or the full listing
+      schema:
+        type: boolean
+        default: false
+    - name: customer_id
+      in: query
+      description: The customer's id to apply the request to
+      required: true
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/GetRecommendations.yaml
+    required: true
+  responses:
+    '200':
+      description: Success
+      content: {}
+    '403':
+      description: Invalid customer_id provided
+      content: {}
+    '404':
+      description: No listing_id in recommendations not found for this customer
+      content: {}
+  security:
+    - api_key: []
+  x-codegen-request-body-name: payload

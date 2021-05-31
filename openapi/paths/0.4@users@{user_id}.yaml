@@ -1,0 +1,35 @@
+get:
+  tags:
+    - Users
+  summary: Retrieve a user by id
+  description: Retrieve a user matching the given user_id.
+  operationId: get_user
+  parameters:
+    - name: user_id
+      in: path
+      description: User ID within Co-libry (typically cookie ID
+      required: true
+      schema:
+        type: string
+    - name: customer_id
+      in: query
+      description: The customer's id to apply the request to
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Success
+      content: {}
+    '401':
+      description: Invalid JWT token
+      content: {}
+    '403':
+      description: Invalid customer_type for this client
+      content: {}
+    '404':
+      description: No user_id found for this customer
+      content: {}
+  security:
+    - api_key: []
+      jwt: []

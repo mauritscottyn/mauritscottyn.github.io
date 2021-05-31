@@ -1,0 +1,11 @@
+type: object
+properties:
+  text:
+    type: string
+    description: Text to apply NLP on
+  texts:
+    maxItems: 10
+    type: array
+    description: Texts to apply NLP on
+    items:
+      type: string

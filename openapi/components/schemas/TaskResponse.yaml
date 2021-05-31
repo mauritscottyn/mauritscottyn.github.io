@@ -1,0 +1,14 @@
+type: object
+properties:
+  customer:
+    type: string
+    description: Name of the customer
+  task_name:
+    type: string
+    description: 'Name of the invoked task as in /tasks/run/{task_name}'
+  task_id:
+    type: string
+    description: 'ID of the task, to be retrieved with /tasks/{task_id}'
+  status:
+    type: string
+    description: 'Status of task: SUBMITTED, IN_PROGRESS, ERROR, DONE'

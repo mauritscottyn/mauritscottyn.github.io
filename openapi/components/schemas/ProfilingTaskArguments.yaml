@@ -1,0 +1,8 @@
+type: object
+properties:
+  query_start:
+    type: string
+    description: >-
+      The day/timestamp you want the start of your data. "auto" means since last
+      run.
+    default: auto

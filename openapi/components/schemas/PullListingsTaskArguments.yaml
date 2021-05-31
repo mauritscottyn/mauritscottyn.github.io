@@ -1,0 +1,19 @@
+type: object
+properties:
+  max_age:
+    type: string
+    description: >-
+      Time period since last update of the listing or since last run (as kwargs
+      of dateutil.relativedelta). "inf" is allowed to fetch all listings.
+      Examples: "hours=25" is 25 hours in the past,
+      "hour=0,minute=0,second=0,microsecond=0" is at midnight.
+  ref:
+    type: string
+    description: >-
+      "last_run": max_age is relative to last run. "listing_time": max_age is
+      relative to the listing timestamp.
+  skip_store_query_time:
+    type: boolean
+    description: >-
+      If True, then the query_time won't be stored in the Elasticsearch index
+      "timing_tasks".

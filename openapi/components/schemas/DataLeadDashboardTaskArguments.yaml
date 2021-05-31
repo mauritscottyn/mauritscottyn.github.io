@@ -1,0 +1,8 @@
+type: object
+properties:
+  query_day:
+    type: string
+    description: >-
+      The day (YYYY-MM-DD) you want to compute the dashboard data for (yesterday
+      if not provided)
+    default: yesterday

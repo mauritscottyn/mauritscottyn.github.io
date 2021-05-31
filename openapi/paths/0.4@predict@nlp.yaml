@@ -1,0 +1,35 @@
+post:
+  tags:
+    - Prediction
+  summary: Apply NLP prediction
+  description: |-
+    Apply an NLP prediction for the given text string(s).
+    Supported languages: de, en, es, fr, it, nl, pl, pt.
+  operationId: post_predict_nlp
+  parameters:
+    - name: customer_id
+      in: query
+      description: The customer's id to apply the request to
+      required: true
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/NLPPredict.yaml
+    required: true
+  responses:
+    '200':
+      description: Success
+      content: {}
+    '401':
+      description: Invalid JWT token
+      content: {}
+    '403':
+      description: Invalid customer_type for this client
+      content: {}
+  security:
+    - api_key: []
+      jwt: []
+  x-codegen-request-body-name: payload

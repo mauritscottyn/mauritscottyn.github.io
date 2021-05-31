@@ -1,0 +1,31 @@
+get:
+  tags:
+    - Real Estate Listings
+  summary: Retrieve a listings by id
+  description: Retrieve a listing matching the given listing_id.
+  operationId: get_listingid_immo
+  parameters:
+    - name: listing_id
+      in: path
+      description: Listing ID within Co-libry
+      required: true
+      schema:
+        type: string
+    - name: customer_id
+      in: query
+      description: The customer's id to apply the request to
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Success
+      content: {}
+    '403':
+      description: Invalid customer_id provided
+      content: {}
+    '404':
+      description: No listing_id found for this customer
+      content: {}
+  security:
+    - api_key: []

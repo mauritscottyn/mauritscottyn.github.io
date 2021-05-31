@@ -1,0 +1,62 @@
+openapi: 3.0.1
+info:
+  title: Co-libry API (dev)
+  version: '0.4'
+servers:
+  - url: //co-libry-services.appspot.com/api
+tags:
+  - name: Real Estate Listings
+    description: Query and manage listings
+  - name: Job Listings
+    description: Query and manage listings
+  - name: Users
+    description: Query and manage users
+  - name: Tasks
+    description: Launch and manage long running tasks
+  - name: Leads
+    description: Store the content of lead_generation in the database
+  - name: Prediction
+    description: Predict with Co-libry's AI models
+paths:
+  /0.4/leads:
+    $ref: paths/0.4@leads.yaml
+  /0.4/leads/_post:
+    $ref: paths/0.4@leads@_post.yaml
+  /0.4/leads/recommendations:
+    $ref: paths/0.4@leads@recommendations.yaml
+  '/0.4/leads/{activecampaign_id}':
+    $ref: 'paths/0.4@leads@{activecampaign_id}.yaml'
+  '/0.4/leads/{activecampaign_id}/_put':
+    $ref: 'paths/0.4@leads@{activecampaign_id}@_put.yaml'
+  /0.4/listings/job:
+    $ref: paths/0.4@listings@job.yaml
+  '/0.4/listings/job/{listing_id}':
+    $ref: 'paths/0.4@listings@job@{listing_id}.yaml'
+  /0.4/listings/real-estate:
+    $ref: paths/0.4@listings@real-estate.yaml
+  /0.4/listings/real-estate/recommend:
+    $ref: paths/0.4@listings@real-estate@recommend.yaml
+  /0.4/listings/real-estate/recommend/_post:
+    $ref: paths/0.4@listings@real-estate@recommend@_post.yaml
+  /0.4/listings/real-estate/seo:
+    $ref: paths/0.4@listings@real-estate@seo.yaml
+  '/0.4/listings/real-estate/{listing_id}':
+    $ref: 'paths/0.4@listings@real-estate@{listing_id}.yaml'
+  /0.4/predict/cv:
+    $ref: paths/0.4@predict@cv.yaml
+  /0.4/predict/nlp:
+    $ref: paths/0.4@predict@nlp.yaml
+  /0.4/users:
+    $ref: paths/0.4@users.yaml
+  '/0.4/users/{user_id}':
+    $ref: 'paths/0.4@users@{user_id}.yaml'
+components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: key
+      in: query
+    jwt:
+      type: apiKey
+      name: Authorization
+      in: header

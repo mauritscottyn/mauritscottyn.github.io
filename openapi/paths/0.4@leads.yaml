@@ -1,0 +1,32 @@
+post:
+  tags:
+    - Leads
+  summary: Create new lead
+  description: Create a lead in our database and in ActiveCampaign/Twilio
+  operationId: post_leads
+  parameters:
+    - name: customer_id
+      in: query
+      description: The customer's id to apply the request to
+      required: true
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/NewLead.yaml
+    required: true
+  responses:
+    '200':
+      description: Success
+      content: {}
+    '403':
+      description: Invalid customer_id provided
+      content: {}
+    '501':
+      description: Pop-up method not supported
+      content: {}
+  security:
+    - api_key: []
+  x-codegen-request-body-name: payload

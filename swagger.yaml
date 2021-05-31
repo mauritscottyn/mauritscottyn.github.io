@@ -1,0 +1,1712 @@
+openapi: 3.0.1
+info:
+  title: Co-libry API (dev)
+  version: "0.4"
+servers:
+- url: //co-libry-services.appspot.com/api
+tags:
+- name: Real Estate Listings
+  description: Query and manage listings
+- name: Job Listings
+  description: Query and manage listings
+- name: Users
+  description: Query and manage users
+- name: Tasks
+  description: Launch and manage long running tasks
+- name: Leads
+  description: Store the content of lead_generation in the database
+- name: Prediction
+  description: Predict with Co-libry's AI models
+paths:
+  /0.4/leads:
+    post:
+      tags:
+      - Leads
+      summary: Create new lead
+      description: Create a lead in our database and in ActiveCampaign/Twilio
+      operationId: post_leads
+      parameters:
+      - name: customer_id
+        in: query
+        description: The customer's id to apply the request to
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewLead'
+        required: true
+      responses:
+        200:
+          description: Success
+          content: {}
+        403:
+          description: Invalid customer_id provided
+          content: {}
+        501:
+          description: Pop-up method not supported
+          content: {}
+      security:
+      - api_key: []
+      x-codegen-request-body-name: payload
+  /0.4/leads/_post:
+    post:
+      tags:
+      - Leads
+      summary: Create new lead
+      description: Create a lead in our database and in ActiveCampaign/Twilio
+      operationId: post_leads_post_form
+      parameters:
+      - name: customer_id
+        in: query
+        description: The customer's id to apply the request to
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - cookie_id
+              - pop-up_method
+              properties:
+                pop-up_method:
+                  type: string
+                  enum:
+                  - email
+                  - browser
+                cookie_id:
+                  type: string
+                  description: Cookie ID of the lead
+                email:
+                  type: string
+                  description: E-mail address of the lead
+                notification_address:
+                  type: string
+                  description: Address for the browser notification
+                phone:
+                  type: string
+                  description: Telephone number of the lead
+          multipart/form-data:
+            schema:
+              required:
+              - cookie_id
+              - pop-up_method
+              properties:
+                pop-up_method:
+                  type: string
+                  enum:
+                  - email
+                  - browser
+                cookie_id:
+                  type: string
+                  description: Cookie ID of the lead
+                email:
+                  type: string
+                  description: E-mail address of the lead
+                notification_address:
+                  type: string
+                  description: Address for the browser notification
+                phone:
+                  type: string
+                  description: Telephone number of the lead
+        required: true
+      responses:
+        200:
+          description: Success
+          content: {}
+        403:
+          description: Invalid customer_id provided
+          content: {}
+        501:
+          description: Pop-up method not supported
+          content: {}
+      security:
+      - api_key: []
+  /0.4/leads/recommendations:
+    get:
+      tags:
+      - Leads
+      summary: Get recommendations for lead
+      description: |-
+        Get recommendations for a lead based on a user_id or listing_id.
+        I we have recommendations for the user_id, those will be returned.
+        If not, we will return recommendations for the listing_id.
+        If there are no listing recommendations, we return random ones.
+      operationId: get_lead_recommendation
+      parameters:
+      - name: user_id
+        in: query
+        description: Return recommendations for this user
+        schema:
+          type: string
+      - name: listing_id
+        in: query
+        description: Return recommendations for this listing
+        schema:
+          type: string
+      - name: size
+        in: query
+        description: Maximum number of results to return (max. 10)
+        schema:
+          type: integer
+          default: 3
+      - name: customer_id
+        in: query
+        description: The customer's id to apply the request to
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          content: {}
+        403:
+          description: Invalid customer_id provided
+          content: {}
+      security:
+      - api_key: []
+  /0.4/leads/{activecampaign_id}:
+    put:
+      tags:
+      - Leads
+      summary: Update leads
+      description: Update the contacts in ActiveCampaign
+      operationId: put_lead
+      parameters:
+      - name: activecampaign_id
+        in: path
+        description: ActiveCampaign ID of the user
+        required: true
+        schema:
+          type: string
+      - name: customer_id
+        in: query
+        description: The customer's id to apply the request to
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lead'
+        required: true
+      responses:
+        200:
+          description: Successfully updated
+          content: {}
+        403:
+          description: Invalid customer_id provided
+          content: {}
+        404:
+          description: Contact not found
+          content: {}
+      security:
+      - api_key: []
+      x-codegen-request-body-name: payload
+  /0.4/leads/{activecampaign_id}/_put:
+    post:
+      tags:
+      - Leads
+      summary: Update leads
+      description: Update the contacts in ActiveCampaign
+      operationId: post_lead_put_form
+      parameters:
+      - name: activecampaign_id
+        in: path
+        description: ActiveCampaign ID of the user
+        required: true
+        schema:
+          type: string
+      - name: customer_id
+        in: query
+        description: The customer's id to apply the request to
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              properties:
+                listing_address:
+                  type: string
+                  description: Address of the listing
+                zipcode:
+                  type: string
+                  description: Zipcode of the listing
+                commune:
+                  type: string
+                  description: Commune of the listing
+                transaction_type:
+                  type: string
+                  description: Transaction type of the listing
+                listing_url:
+                  type: string
+                  description: URL of the listing
+                image_listing:
+                  type: string
+                  description: Image URL of the listing
+                listing_price:
+                  type: string
+                  description: Price of the listing
+                listing_surface:
+                  type: string
+                  description: Building surface of the listing
+                property_surface:
+                  type: string
+                  description: Property surface of the listing
+                title:
+                  type: string
+                  description: Title of the listing
+                listing_type:
+                  type: string
+                  description: Type of the listing
+          multipart/form-data:
+            schema:
+              properties:
+                listing_address:
+                  type: string
+                  description: Address of the listing
+                zipcode:
+                  type: string
+                  description: Zipcode of the listing
+                commune:
+                  type: string
+                  description: Commune of the listing
+                transaction_type:
+                  type: string
+                  description: Transaction type of the listing
+                listing_url:
+                  type: string
+                  description: URL of the listing
+                image_listing:
+                  type: string
+                  description: Image URL of the listing
+                listing_price:
+                  type: string
+                  description: Price of the listing
+                listing_surface:
+                  type: string
+                  description: Building surface of the listing
+                property_surface:
+                  type: string
+                  description: Property surface of the listing
+                title:
+                  type: string
+                  description: Title of the listing
+                listing_type:
+                  type: string
+                  description: Type of the listing
+      responses:
+        200:
+          description: Successfully updated
+          content: {}
+        403:
+          description: Invalid customer_id provided
+          content: {}
+        404:
+          description: Contact not found
+          content: {}
+      security:
+      - api_key: []
+  /0.4/listings/job:
+    get:
+      tags:
+      - Job Listings
+      summary: Query listings
+      description: |-
+        Retrieve listings matching the given query.
+        The results are paginated (see `size` and `after`).
+        The returned listings are sorted by id.
+      operationId: get_listing_job
+      parameters:
+      - name: after
+        in: query
+        description: Return results after the given "id" (for pagination)
+        schema:
+          type: string
+      - name: size
+        in: query
+        description: Maximum number of results to return (max. 10000)
+        schema:
+          type: integer
+          default: 100
+      - name: nlp
+        in: query
+        description: Comma separated list of NLP keywords you want to query on
+        schema:
+          type: string
+      - name: full_listing
+        in: query
+        description: Only show the ids and not the entire listing
+        schema:
+          type: boolean
+          default: false
+      - name: customer_id
+        in: query
+        description: The customer's id to apply the request to
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListingQueryResponse'
+        403:
+          description: Invalid customer_id provided
+          content: {}
+      security:
+      - api_key: []
+  /0.4/listings/job/{listing_id}:
+    get:
+      tags:
+      - Job Listings
+      summary: Retrieve a listings by id
+      description: Retrieve a listing matching the given listing_id.
+      operationId: get_listingid_job
+      parameters:
+      - name: listing_id
+        in: path
+        description: Listing ID within Co-libry
+        required: true
+        schema:
+          type: string
+      - name: customer_id
+        in: query
+        description: The customer's id to apply the request to
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          content: {}
+        403:
+          description: Invalid customer_id provided
+          content: {}
+        404:
+          description: No listing_id found for this customer
+          content: {}
+      security:
+      - api_key: []
+  /0.4/listings/real-estate:
+    get:
+      tags:
+      - Real Estate Listings
+      summary: Query listings
+      description: |-
+        Retrieve listings matching the given query.
+        The results are paginated (see `size` and `after`).
+        The returned listings are sorted by id.
+      operationId: get_listing_immo
+      parameters:
+      - name: min_listings
+        in: query
+        description: Total number of listing which should minimally be returned. The
+          results of the search engine will be enriched with recommendations. Maximum
+          filled up until the number given in size, it is possible that there are
+          not enough recommendations leading to a lower amount returned.
+        schema:
+          type: integer
+      - name: size
+        in: query
+        description: Maximum number of results to return (max. 10000)
+        schema:
+          type: integer
+          default: 100
+      - name: after
+        in: query
+        description: Return results after the given "id" (for pagination)
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: |-
+          Search will only return the fields specified here.
+          You can add all fields as a , separated list e.g:
+          filter=profile.contacts,third_party.schools.score,source.listing_url will return data for these 3 fields.
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: id
+        in: query
+        description: Matches on substring
+        schema:
+          type: string
+      - name: updated_by_colibry
+        in: query
+        description: |-
+          Use UTC ISO-8601 date/time notation with separators, Use comma for ranges:
+          "2020-01-01,": on Jan. 1st or later,
+          "2020-01-01T14:00,2020-01-01T15:00": on Jan. 1st between 2 and 3 p.m. UTC.
+        schema:
+          type: string
+      - name: source.publication_date
+        in: query
+        description: |-
+          Use UTC ISO-8601 date/time notation with separators, Use comma for ranges:
+          "2020-01-01,": on Jan. 1st or later,
+          "2020-01-01T14:00,2020-01-01T15:00": on Jan. 1st between 2 and 3 p.m. UTC.
+        schema:
+          type: string
+      - name: source.contact.address.zip
+        in: query
+        description: Matches on substring
+        schema:
+          type: string
+      - name: source.contact.address.city
+        in: query
+        description: Matches on substring
+        schema:
+          type: string
+      - name: source.contact.address.country
+        in: query
+        description: Matches on substring
+        schema:
+          type: string
+      - name: original.listing.type
+        in: query
+        description: Matches on substring
+        schema:
+          type: string
+      - name: original.listing.status
+        in: query
+        description: Matches on one of the allowed values
+        schema:
+          type: string
+          enum:
+          - AVAILABLE
+          - UNAVAILABLE
+          - SOLD
+          - RENTED
+          - INOPTION
+      - name: original.listing.rooms.bedrooms.count
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: original.listing.rooms.bathrooms
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: original.listing.building.construction_year
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: original.listing.surface.living
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: original.listing.surface.build
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: original.listing.surface.plot
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: original.listing.address.zipcode
+        in: query
+        description: Matches on substring
+        schema:
+          type: string
+      - name: original.listing.address.city
+        in: query
+        description: Matches on substring
+        schema:
+          type: string
+      - name: original.listing.address.country
+        in: query
+        description: Matches on substring
+        schema:
+          type: string
+      - name: original.listing.condition
+        in: query
+        description: Matches on one of the allowed values
+        schema:
+          type: string
+          enum:
+          - NEW
+          - GOODCONDITION
+          - PERFECTCONDITION
+          - TORENOVATE
+          - RENOVATED
+      - name: original.offering.last_updated
+        in: query
+        description: |-
+          Use UTC ISO-8601 date/time notation with separators, Use comma for ranges:
+          "2020-01-01,": on Jan. 1st or later,
+          "2020-01-01T14:00,2020-01-01T15:00": on Jan. 1st between 2 and 3 p.m. UTC.
+        schema:
+          type: string
+      - name: original.offering.status
+        in: query
+        description: Use "true", "false" or "all" to match
+        schema:
+          type: string
+          default: "true"
+          enum:
+          - "true"
+          - "false"
+          - all
+      - name: original.offering.language
+        in: query
+        description: Matches on substring
+        schema:
+          type: string
+      - name: original.offering.type
+        in: query
+        description: Matches on one of the allowed values
+        schema:
+          type: string
+          enum:
+          - SALE
+          - RENT
+      - name: original.costs.sales_price
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: original.costs.rental_price
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: derived.nlp.characteristics
+        in: query
+        description: Matches on substring
+        schema:
+          type: string
+      - name: profile.views
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.pictures
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.contacts
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.conversion_rate
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: customer_id
+        in: query
+        description: The customer's id to apply the request to
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListingQueryResponse'
+        403:
+          description: Invalid customer_id provided
+          content: {}
+      security:
+      - api_key: []
+    post:
+      tags:
+      - Real Estate Listings
+      summary: Add a listing to Co-libry's database
+      description: |-
+        Map and add a given listing in Co-libry's database.
+        The listing should be in the customer's template.
+        The listing is mapped to Co-libry's template.
+        The mapped listing is returned in the response.
+      operationId: post_listings
+      parameters:
+      - name: customer_id
+        in: query
+        description: The customer's id to apply the request to
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnyListing'
+        required: true
+      responses:
+        201:
+          description: Created (returns the mapped model in the response)
+          content: {}
+        400:
+          description: Cannot map the body to Co-libry's template
+          content: {}
+        401:
+          description: Invalid JWT token
+          content: {}
+        403:
+          description: Invalid customer_type for this client
+          content: {}
+        409:
+          description: A listing with the given ID already exists
+          content: {}
+      security:
+      - api_key: []
+        jwt: []
+      x-codegen-request-body-name: payload
+  /0.4/listings/real-estate/recommend:
+    post:
+      tags:
+      - Real Estate Listings
+      summary: Retrieve a recommendations by ids
+      description: Retrieve a recommendations matching the given listing_ids.
+      operationId: post_recommend
+      parameters:
+      - name: score_threshold
+        in: query
+        description: Threshold above which recommendations are given
+        schema:
+          type: number
+          default: 0.5
+      - name: full_listing
+        in: query
+        description: Whether the result is the listing id or the full listing
+        schema:
+          type: boolean
+          default: false
+      - name: customer_id
+        in: query
+        description: The customer's id to apply the request to
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetRecommendations'
+        required: true
+      responses:
+        200:
+          description: Success
+          content: {}
+        403:
+          description: Invalid customer_id provided
+          content: {}
+        404:
+          description: No listing_id in recommendations not found for this customer
+          content: {}
+      security:
+      - api_key: []
+      x-codegen-request-body-name: payload
+  /0.4/listings/real-estate/recommend/_post:
+    post:
+      tags:
+      - Real Estate Listings
+      summary: Retrieve a recommendations by ids
+      description: Retrieve a recommendations matching the given listing_ids.
+      operationId: post_recommend_post_form
+      parameters:
+      - name: score_threshold
+        in: query
+        description: Threshold above which recommendations are given
+        schema:
+          type: number
+          default: 0.5
+      - name: full_listing
+        in: query
+        description: Whether the result is the listing id or the full listing
+        schema:
+          type: boolean
+          default: false
+      - name: customer_id
+        in: query
+        description: The customer's id to apply the request to
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - listing_ids
+              properties:
+                listing_ids:
+                  type: array
+                  items:
+                    type: string
+          multipart/form-data:
+            schema:
+              required:
+              - listing_ids
+              properties:
+                listing_ids:
+                  type: array
+                  items:
+                    type: string
+        required: true
+      responses:
+        200:
+          description: Success
+          content: {}
+        403:
+          description: Invalid customer_id provided
+          content: {}
+        404:
+          description: No listing_id in recommendations not found for this customer
+          content: {}
+      security:
+      - api_key: []
+  /0.4/listings/real-estate/seo:
+    get:
+      tags:
+      - Real Estate Listings
+      summary: Retrieve a listing ids by Url
+      description: Retrieve a list of listings ids matching the given seo url.
+      operationId: get_seo
+      parameters:
+      - name: url
+        in: query
+        description: The url of the landing page, used to fetch the required listing
+          ids.
+        required: true
+        schema:
+          type: string
+      - name: customer_id
+        in: query
+        description: The customer's id to apply the request to
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          content: {}
+        403:
+          description: Invalid customer_id provided
+          content: {}
+        404:
+          description: Url was not found in the database
+          content: {}
+      security:
+      - api_key: []
+  /0.4/listings/real-estate/{listing_id}:
+    get:
+      tags:
+      - Real Estate Listings
+      summary: Retrieve a listings by id
+      description: Retrieve a listing matching the given listing_id.
+      operationId: get_listingid_immo
+      parameters:
+      - name: listing_id
+        in: path
+        description: Listing ID within Co-libry
+        required: true
+        schema:
+          type: string
+      - name: customer_id
+        in: query
+        description: The customer's id to apply the request to
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          content: {}
+        403:
+          description: Invalid customer_id provided
+          content: {}
+        404:
+          description: No listing_id found for this customer
+          content: {}
+      security:
+      - api_key: []
+  /0.4/predict/cv:
+    post:
+      tags:
+      - Prediction
+      summary: Apply CV prediction
+      description: Apply an CV prediction for the given image url.
+      operationId: post_predict_cv
+      parameters:
+      - name: customer_id
+        in: query
+        description: The customer's id to apply the request to
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CVPredict'
+        required: true
+      responses:
+        200:
+          description: Success
+          content: {}
+        401:
+          description: Invalid JWT token
+          content: {}
+        403:
+          description: Invalid customer_type for this client
+          content: {}
+      security:
+      - api_key: []
+        jwt: []
+      x-codegen-request-body-name: payload
+  /0.4/predict/nlp:
+    post:
+      tags:
+      - Prediction
+      summary: Apply NLP prediction
+      description: |-
+        Apply an NLP prediction for the given text string(s).
+        Supported languages: de, en, es, fr, it, nl, pl, pt.
+      operationId: post_predict_nlp
+      parameters:
+      - name: customer_id
+        in: query
+        description: The customer's id to apply the request to
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NLPPredict'
+        required: true
+      responses:
+        200:
+          description: Success
+          content: {}
+        401:
+          description: Invalid JWT token
+          content: {}
+        403:
+          description: Invalid customer_type for this client
+          content: {}
+      security:
+      - api_key: []
+        jwt: []
+      x-codegen-request-body-name: payload
+  /0.4/users:
+    get:
+      tags:
+      - Users
+      summary: Query users
+      description: |-
+        Retrieve users matching the given query.
+        The results are paginated (see `size` and `after`).
+        The returned users are sorted by id.
+      operationId: get_users
+      parameters:
+      - name: size
+        in: query
+        description: Maximum number of results to return (max. 10000)
+        schema:
+          type: integer
+          default: 100
+      - name: after
+        in: query
+        description: Return results after the given "id" (for pagination)
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: |-
+          Search will only return the fields specified here.
+          You can add all fields as a , separated list e.g:
+          filter=profile.contacts,third_party.schools.score,source.listing_url will return data for these 3 fields.
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: last_updated
+        in: query
+        description: |-
+          Use UTC ISO-8601 date/time notation with separators, Use comma for ranges:
+          "2020-01-01,": on Jan. 1st or later,
+          "2020-01-01T14:00,2020-01-01T15:00": on Jan. 1st between 2 and 3 p.m. UTC.
+        schema:
+          type: string
+      - name: activity.avg_time_on_site
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: activity.language
+        in: query
+        description: Matches on substring
+        schema:
+          type: string
+      - name: activity.last_visit
+        in: query
+        description: |-
+          Use UTC ISO-8601 date/time notation with separators, Use comma for ranges:
+          "2020-01-01,": on Jan. 1st or later,
+          "2020-01-01T14:00,2020-01-01T15:00": on Jan. 1st between 2 and 3 p.m. UTC.
+        schema:
+          type: string
+      - name: activity.nb_sessions
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: activity.platform
+        in: query
+        description: Matches on substring
+        schema:
+          type: string
+      - name: activity.timezone
+        in: query
+        description: Matches on substring
+        schema:
+          type: string
+      - name: activity.contact
+        in: query
+        description: |-
+          Number of contacts with brokers.
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: activity.detail
+        in: query
+        description: |-
+          Number of visits of listing details.
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: activity.home
+        in: query
+        description: |-
+          Number of visits of the home page.
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: activity.news
+        in: query
+        description: |-
+          Number of visits of the news page.
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: activity.picture
+        in: query
+        description: |-
+          Number of listing pictures viewed.
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: activity.search
+        in: query
+        description: |-
+          Number of searches performed.
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: activity.vr_tour
+        in: query
+        description: |-
+          Number of VR tours taken.
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.costs.rental_price.min
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.costs.rental_price.max
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.costs.rental_price.sum
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.costs.sales_price.min
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.costs.sales_price.max
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.costs.sales_price.sum
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.listing.building.construction_year.min
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.listing.building.construction_year.max
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.listing.building.construction_year.sum
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.listing.condition.GOODCONDITION.sum
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.listing.condition.PERFECTCONDITION.sum
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.listing.condition.TORENOVATE.sum
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.listing.coordinates.lon.min
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.listing.coordinates.lon.max
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.listing.coordinates.lon.sum
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.listing.coordinates.lat.min
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.listing.coordinates.lat.max
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.listing.coordinates.lat.sum
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.listing.rooms.bathrooms.min
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.listing.rooms.bathrooms.max
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.listing.rooms.bathrooms.sum
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.listing.rooms.bedrooms.count.min
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.listing.rooms.bedrooms.count.max
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.listing.rooms.bedrooms.count.sum
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.surface.living.min
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.surface.living.max
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.surface.living.sum
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.surface.plot.min
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.surface.plot.max
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.surface.plot.sum
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.offering.type.RENT.sum
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: profile.original.offering.type.SALE.sum
+        in: query
+        description: |-
+          Use comma for ranges:
+          "3,8": between 3 and 8 included,
+          "3,": 3 or more,
+          ",8": 8 or less.
+        schema:
+          type: string
+      - name: customer_id
+        in: query
+        description: The customer's id to apply the request to
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserQueryResponse'
+        401:
+          description: Invalid JWT token
+          content: {}
+        403:
+          description: Invalid customer_type for this client
+          content: {}
+      security:
+      - api_key: []
+        jwt: []
+  /0.4/users/{user_id}:
+    get:
+      tags:
+      - Users
+      summary: Retrieve a user by id
+      description: Retrieve a user matching the given user_id.
+      operationId: get_user
+      parameters:
+      - name: user_id
+        in: path
+        description: User ID within Co-libry (typically cookie ID
+        required: true
+        schema:
+          type: string
+      - name: customer_id
+        in: query
+        description: The customer's id to apply the request to
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          content: {}
+        401:
+          description: Invalid JWT token
+          content: {}
+        403:
+          description: Invalid customer_type for this client
+          content: {}
+        404:
+          description: No user_id found for this customer
+          content: {}
+      security:
+      - api_key: []
+        jwt: []
+components:
+  schemas:
+    AnyListing:
+      type: object
+      properties:
+        '*':
+          type: number
+    ListingQueryResponse:
+      type: object
+      properties:
+        total:
+          maximum: 1E+4
+          minimum: 0
+          type: integer
+          description: Number of listings matching the query (max. 10000)
+          example: 20
+        hits:
+          type: array
+          description: List of matching listing objects
+          items:
+            type: object
+            properties: {}
+    GetRecommendations:
+      required:
+      - listing_ids
+      type: object
+      properties:
+        listing_ids:
+          type: array
+          items:
+            type: string
+    UserQueryResponse:
+      type: object
+      properties:
+        total:
+          maximum: 1E+4
+          minimum: 0
+          type: integer
+          description: Number of users matching the query (max. 10000)
+          example: 20
+        hits:
+          type: array
+          description: List of matching users
+          items:
+            type: object
+            properties: {}
+    DummyDataprocTaskArguments:
+      type: object
+      properties:
+        some_arg:
+          type: string
+          description: Some argument
+          default: foo
+    TaskResponse:
+      type: object
+      properties:
+        customer:
+          type: string
+          description: Name of the customer
+        task_name:
+          type: string
+          description: Name of the invoked task as in /tasks/run/{task_name}
+        task_id:
+          type: string
+          description: ID of the task, to be retrieved with /tasks/{task_id}
+        status:
+          type: string
+          description: 'Status of task: SUBMITTED, IN_PROGRESS, ERROR, DONE'
+    PreprocessingPageviewsTaskArguments:
+      type: object
+      properties:
+        query_start:
+          type: string
+          description: The day/timestamp you want the start of your data. "auto" means
+            since last run.
+          default: auto
+    ProfilingTaskArguments:
+      type: object
+      properties:
+        query_start:
+          type: string
+          description: The day/timestamp you want the start of your data. "auto" means
+            since last run.
+          default: auto
+    RecommendationTaskArguments:
+      type: object
+      properties:
+        model_name:
+          type: string
+          description: The model used for l2r
+          default: "20200512"
+    UserActivityTaskArguments:
+      type: object
+      properties:
+        query_start:
+          type: string
+          description: The day/timestamp you want the start of your data. The task
+            will take all the users since this moment and compute their journey. "auto"
+            means since last run.
+          default: auto
+    DataLeadDashboardTaskArguments:
+      type: object
+      properties:
+        query_day:
+          type: string
+          description: The day (YYYY-MM-DD) you want to compute the dashboard data
+            for (yesterday if not provided)
+          default: yesterday
+    DummyDataTaskArguments:
+      type: object
+      properties:
+        some_arg:
+          type: string
+          description: Some argument
+          default: foo
+    CreateLeadTaskArguments:
+      required:
+      - cookie_id
+      - method
+      type: object
+      properties:
+        method:
+          type: string
+          example: email
+          enum:
+          - email
+          - browser
+        cookie_id:
+          type: string
+          description: Cookie ID of the lead
+        email:
+          type: string
+          description: E-mail address of the lead
+        notification_address:
+          type: string
+          description: Address for the browser notification
+        phone:
+          type: string
+          description: Telephone number of the lead
+    PullListingsTaskArguments:
+      type: object
+      properties:
+        max_age:
+          type: string
+          description: 'Time period since last update of the listing or since last
+            run (as kwargs of dateutil.relativedelta). "inf" is allowed to fetch all
+            listings. Examples: "hours=25" is 25 hours in the past, "hour=0,minute=0,second=0,microsecond=0"
+            is at midnight.'
+        ref:
+          type: string
+          description: '"last_run": max_age is relative to last run. "listing_time":
+            max_age is relative to the listing timestamp.'
+        skip_store_query_time:
+          type: boolean
+          description: If True, then the query_time won't be stored in the Elasticsearch
+            index "timing_tasks".
+    NewLead:
+      required:
+      - cookie_id
+      - pop-up_method
+      type: object
+      properties:
+        pop-up_method:
+          type: string
+          example: email
+          enum:
+          - email
+          - browser
+        cookie_id:
+          type: string
+          description: Cookie ID of the lead
+        email:
+          type: string
+          description: E-mail address of the lead
+        notification_address:
+          type: string
+          description: Address for the browser notification
+        phone:
+          type: string
+          description: Telephone number of the lead
+    Lead:
+      type: object
+      properties:
+        listing_address:
+          type: string
+          description: Address of the listing
+        zipcode:
+          type: string
+          description: Zipcode of the listing
+        commune:
+          type: string
+          description: Commune of the listing
+        transaction_type:
+          type: string
+          description: Transaction type of the listing
+        listing_url:
+          type: string
+          description: URL of the listing
+        image_listing:
+          type: string
+          description: Image URL of the listing
+        listing_price:
+          type: string
+          description: Price of the listing
+        listing_surface:
+          type: string
+          description: Building surface of the listing
+        property_surface:
+          type: string
+          description: Property surface of the listing
+        title:
+          type: string
+          description: Title of the listing
+        listing_type:
+          type: string
+          description: Type of the listing
+    NLPPredict:
+      type: object
+      properties:
+        text:
+          type: string
+          description: Text to apply NLP on
+        texts:
+          maxItems: 10
+          type: array
+          description: Texts to apply NLP on
+          items:
+            type: string
+    CVPredict:
+      type: object
+      properties:
+        url:
+          type: string
+          description: URL pointing to the image we want to predict
+  responses:
+    MaskError:
+      description: When any error occurs on mask
+      content: {}
+    ParseError:
+      description: When a mask can't be parsed
+      content: {}
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: key
+      in: query
+    jwt:
+      type: apiKey
+      name: Authorization
+      in: header

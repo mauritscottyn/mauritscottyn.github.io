@@ -1,0 +1,105 @@
+post:
+  tags:
+    - Leads
+  summary: Update leads
+  description: Update the contacts in ActiveCampaign
+  operationId: post_lead_put_form
+  parameters:
+    - name: activecampaign_id
+      in: path
+      description: ActiveCampaign ID of the user
+      required: true
+      schema:
+        type: string
+    - name: customer_id
+      in: query
+      description: The customer's id to apply the request to
+      required: true
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/x-www-form-urlencoded:
+        schema:
+          properties:
+            listing_address:
+              type: string
+              description: Address of the listing
+            zipcode:
+              type: string
+              description: Zipcode of the listing
+            commune:
+              type: string
+              description: Commune of the listing
+            transaction_type:
+              type: string
+              description: Transaction type of the listing
+            listing_url:
+              type: string
+              description: URL of the listing
+            image_listing:
+              type: string
+              description: Image URL of the listing
+            listing_price:
+              type: string
+              description: Price of the listing
+            listing_surface:
+              type: string
+              description: Building surface of the listing
+            property_surface:
+              type: string
+              description: Property surface of the listing
+            title:
+              type: string
+              description: Title of the listing
+            listing_type:
+              type: string
+              description: Type of the listing
+      multipart/form-data:
+        schema:
+          properties:
+            listing_address:
+              type: string
+              description: Address of the listing
+            zipcode:
+              type: string
+              description: Zipcode of the listing
+            commune:
+              type: string
+              description: Commune of the listing
+            transaction_type:
+              type: string
+              description: Transaction type of the listing
+            listing_url:
+              type: string
+              description: URL of the listing
+            image_listing:
+              type: string
+              description: Image URL of the listing
+            listing_price:
+              type: string
+              description: Price of the listing
+            listing_surface:
+              type: string
+              description: Building surface of the listing
+            property_surface:
+              type: string
+              description: Property surface of the listing
+            title:
+              type: string
+              description: Title of the listing
+            listing_type:
+              type: string
+              description: Type of the listing
+  responses:
+    '200':
+      description: Successfully updated
+      content: {}
+    '403':
+      description: Invalid customer_id provided
+      content: {}
+    '404':
+      description: Contact not found
+      content: {}
+  security:
+    - api_key: []

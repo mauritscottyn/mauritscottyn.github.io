@@ -1,0 +1,23 @@
+required:
+  - cookie_id
+  - method
+type: object
+properties:
+  method:
+    type: string
+    example: email
+    enum:
+      - email
+      - browser
+  cookie_id:
+    type: string
+    description: Cookie ID of the lead
+  email:
+    type: string
+    description: E-mail address of the lead
+  notification_address:
+    type: string
+    description: Address for the browser notification
+  phone:
+    type: string
+    description: Telephone number of the lead

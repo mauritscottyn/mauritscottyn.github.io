@@ -1,0 +1,340 @@
+get:
+  tags:
+    - Real Estate Listings
+  summary: Query listings
+  description: |-
+    Retrieve listings matching the given query.
+    The results are paginated (see `size` and `after`).
+    The returned listings are sorted by id.
+  operationId: get_listing_immo
+  parameters:
+    - name: min_listings
+      in: query
+      description: >-
+        Total number of listing which should minimally be returned. The results
+        of the search engine will be enriched with recommendations. Maximum
+        filled up until the number given in size, it is possible that there are
+        not enough recommendations leading to a lower amount returned.
+      schema:
+        type: integer
+    - name: size
+      in: query
+      description: Maximum number of results to return (max. 10000)
+      schema:
+        type: integer
+        default: 100
+    - name: after
+      in: query
+      description: Return results after the given "id" (for pagination)
+      schema:
+        type: string
+    - name: filter
+      in: query
+      description: >-
+        Search will only return the fields specified here.
+
+        You can add all fields as a , separated list e.g:
+
+        filter=profile.contacts,third_party.schools.score,source.listing_url
+        will return data for these 3 fields.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+    - name: id
+      in: query
+      description: Matches on substring
+      schema:
+        type: string
+    - name: updated_by_colibry
+      in: query
+      description: >-
+        Use UTC ISO-8601 date/time notation with separators, Use comma for
+        ranges:
+
+        "2020-01-01,": on Jan. 1st or later,
+
+        "2020-01-01T14:00,2020-01-01T15:00": on Jan. 1st between 2 and 3 p.m.
+        UTC.
+      schema:
+        type: string
+    - name: source.publication_date
+      in: query
+      description: >-
+        Use UTC ISO-8601 date/time notation with separators, Use comma for
+        ranges:
+
+        "2020-01-01,": on Jan. 1st or later,
+
+        "2020-01-01T14:00,2020-01-01T15:00": on Jan. 1st between 2 and 3 p.m.
+        UTC.
+      schema:
+        type: string
+    - name: source.contact.address.zip
+      in: query
+      description: Matches on substring
+      schema:
+        type: string
+    - name: source.contact.address.city
+      in: query
+      description: Matches on substring
+      schema:
+        type: string
+    - name: source.contact.address.country
+      in: query
+      description: Matches on substring
+      schema:
+        type: string
+    - name: original.listing.type
+      in: query
+      description: Matches on substring
+      schema:
+        type: string
+    - name: original.listing.status
+      in: query
+      description: Matches on one of the allowed values
+      schema:
+        type: string
+        enum:
+          - AVAILABLE
+          - UNAVAILABLE
+          - SOLD
+          - RENTED
+          - INOPTION
+    - name: original.listing.rooms.bedrooms.count
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: original.listing.rooms.bathrooms
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: original.listing.building.construction_year
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: original.listing.surface.living
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: original.listing.surface.build
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: original.listing.surface.plot
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: original.listing.address.zipcode
+      in: query
+      description: Matches on substring
+      schema:
+        type: string
+    - name: original.listing.address.city
+      in: query
+      description: Matches on substring
+      schema:
+        type: string
+    - name: original.listing.address.country
+      in: query
+      description: Matches on substring
+      schema:
+        type: string
+    - name: original.listing.condition
+      in: query
+      description: Matches on one of the allowed values
+      schema:
+        type: string
+        enum:
+          - NEW
+          - GOODCONDITION
+          - PERFECTCONDITION
+          - TORENOVATE
+          - RENOVATED
+    - name: original.offering.last_updated
+      in: query
+      description: >-
+        Use UTC ISO-8601 date/time notation with separators, Use comma for
+        ranges:
+
+        "2020-01-01,": on Jan. 1st or later,
+
+        "2020-01-01T14:00,2020-01-01T15:00": on Jan. 1st between 2 and 3 p.m.
+        UTC.
+      schema:
+        type: string
+    - name: original.offering.status
+      in: query
+      description: 'Use "true", "false" or "all" to match'
+      schema:
+        type: string
+        default: 'true'
+        enum:
+          - 'true'
+          - 'false'
+          - all
+    - name: original.offering.language
+      in: query
+      description: Matches on substring
+      schema:
+        type: string
+    - name: original.offering.type
+      in: query
+      description: Matches on one of the allowed values
+      schema:
+        type: string
+        enum:
+          - SALE
+          - RENT
+    - name: original.costs.sales_price
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: original.costs.rental_price
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: derived.nlp.characteristics
+      in: query
+      description: Matches on substring
+      schema:
+        type: string
+    - name: profile.views
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.pictures
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.contacts
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.conversion_rate
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: customer_id
+      in: query
+      description: The customer's id to apply the request to
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ListingQueryResponse.yaml
+    '403':
+      description: Invalid customer_id provided
+      content: {}
+  security:
+    - api_key: []
+post:
+  tags:
+    - Real Estate Listings
+  summary: Add a listing to Co-libry's database
+  description: |-
+    Map and add a given listing in Co-libry's database.
+    The listing should be in the customer's template.
+    The listing is mapped to Co-libry's template.
+    The mapped listing is returned in the response.
+  operationId: post_listings
+  parameters:
+    - name: customer_id
+      in: query
+      description: The customer's id to apply the request to
+      required: true
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/AnyListing.yaml
+    required: true
+  responses:
+    '201':
+      description: Created (returns the mapped model in the response)
+      content: {}
+    '400':
+      description: Cannot map the body to Co-libry's template
+      content: {}
+    '401':
+      description: Invalid JWT token
+      content: {}
+    '403':
+      description: Invalid customer_type for this client
+      content: {}
+    '409':
+      description: A listing with the given ID already exists
+      content: {}
+  security:
+    - api_key: []
+      jwt: []
+  x-codegen-request-body-name: payload

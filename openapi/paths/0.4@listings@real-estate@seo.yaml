@@ -1,0 +1,31 @@
+get:
+  tags:
+    - Real Estate Listings
+  summary: Retrieve a listing ids by Url
+  description: Retrieve a list of listings ids matching the given seo url.
+  operationId: get_seo
+  parameters:
+    - name: url
+      in: query
+      description: 'The url of the landing page, used to fetch the required listing ids.'
+      required: true
+      schema:
+        type: string
+    - name: customer_id
+      in: query
+      description: The customer's id to apply the request to
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Success
+      content: {}
+    '403':
+      description: Invalid customer_id provided
+      content: {}
+    '404':
+      description: Url was not found in the database
+      content: {}
+  security:
+    - api_key: []

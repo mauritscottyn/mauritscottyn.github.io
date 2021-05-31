@@ -1,0 +1,6 @@
+type: object
+properties:
+  model_name:
+    type: string
+    description: The model used for l2r
+    default: '20200512'

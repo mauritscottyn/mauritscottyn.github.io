@@ -1,0 +1,74 @@
+post:
+  tags:
+    - Leads
+  summary: Create new lead
+  description: Create a lead in our database and in ActiveCampaign/Twilio
+  operationId: post_leads_post_form
+  parameters:
+    - name: customer_id
+      in: query
+      description: The customer's id to apply the request to
+      required: true
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/x-www-form-urlencoded:
+        schema:
+          required:
+            - cookie_id
+            - pop-up_method
+          properties:
+            pop-up_method:
+              type: string
+              enum:
+                - email
+                - browser
+            cookie_id:
+              type: string
+              description: Cookie ID of the lead
+            email:
+              type: string
+              description: E-mail address of the lead
+            notification_address:
+              type: string
+              description: Address for the browser notification
+            phone:
+              type: string
+              description: Telephone number of the lead
+      multipart/form-data:
+        schema:
+          required:
+            - cookie_id
+            - pop-up_method
+          properties:
+            pop-up_method:
+              type: string
+              enum:
+                - email
+                - browser
+            cookie_id:
+              type: string
+              description: Cookie ID of the lead
+            email:
+              type: string
+              description: E-mail address of the lead
+            notification_address:
+              type: string
+              description: Address for the browser notification
+            phone:
+              type: string
+              description: Telephone number of the lead
+    required: true
+  responses:
+    '200':
+      description: Success
+      content: {}
+    '403':
+      description: Invalid customer_id provided
+      content: {}
+    '501':
+      description: Pop-up method not supported
+      content: {}
+  security:
+    - api_key: []

@@ -1,0 +1,14 @@
+type: object
+properties:
+  total:
+    maximum: 10000
+    minimum: 0
+    type: integer
+    description: Number of users matching the query (max. 10000)
+    example: 20
+  hits:
+    type: array
+    description: List of matching users
+    items:
+      type: object
+      properties: {}

@@ -1,0 +1,6 @@
+type: object
+properties:
+  some_arg:
+    type: string
+    description: Some argument
+    default: foo

@@ -1,0 +1,42 @@
+get:
+  tags:
+    - Leads
+  summary: Get recommendations for lead
+  description: |-
+    Get recommendations for a lead based on a user_id or listing_id.
+    I we have recommendations for the user_id, those will be returned.
+    If not, we will return recommendations for the listing_id.
+    If there are no listing recommendations, we return random ones.
+  operationId: get_lead_recommendation
+  parameters:
+    - name: user_id
+      in: query
+      description: Return recommendations for this user
+      schema:
+        type: string
+    - name: listing_id
+      in: query
+      description: Return recommendations for this listing
+      schema:
+        type: string
+    - name: size
+      in: query
+      description: Maximum number of results to return (max. 10)
+      schema:
+        type: integer
+        default: 3
+    - name: customer_id
+      in: query
+      description: The customer's id to apply the request to
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Success
+      content: {}
+    '403':
+      description: Invalid customer_id provided
+      content: {}
+  security:
+    - api_key: []

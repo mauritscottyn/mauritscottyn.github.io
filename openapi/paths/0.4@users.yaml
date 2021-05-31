@@ -1,0 +1,473 @@
+get:
+  tags:
+    - Users
+  summary: Query users
+  description: |-
+    Retrieve users matching the given query.
+    The results are paginated (see `size` and `after`).
+    The returned users are sorted by id.
+  operationId: get_users
+  parameters:
+    - name: size
+      in: query
+      description: Maximum number of results to return (max. 10000)
+      schema:
+        type: integer
+        default: 100
+    - name: after
+      in: query
+      description: Return results after the given "id" (for pagination)
+      schema:
+        type: string
+    - name: filter
+      in: query
+      description: >-
+        Search will only return the fields specified here.
+
+        You can add all fields as a , separated list e.g:
+
+        filter=profile.contacts,third_party.schools.score,source.listing_url
+        will return data for these 3 fields.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+    - name: last_updated
+      in: query
+      description: >-
+        Use UTC ISO-8601 date/time notation with separators, Use comma for
+        ranges:
+
+        "2020-01-01,": on Jan. 1st or later,
+
+        "2020-01-01T14:00,2020-01-01T15:00": on Jan. 1st between 2 and 3 p.m.
+        UTC.
+      schema:
+        type: string
+    - name: activity.avg_time_on_site
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: activity.language
+      in: query
+      description: Matches on substring
+      schema:
+        type: string
+    - name: activity.last_visit
+      in: query
+      description: >-
+        Use UTC ISO-8601 date/time notation with separators, Use comma for
+        ranges:
+
+        "2020-01-01,": on Jan. 1st or later,
+
+        "2020-01-01T14:00,2020-01-01T15:00": on Jan. 1st between 2 and 3 p.m.
+        UTC.
+      schema:
+        type: string
+    - name: activity.nb_sessions
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: activity.platform
+      in: query
+      description: Matches on substring
+      schema:
+        type: string
+    - name: activity.timezone
+      in: query
+      description: Matches on substring
+      schema:
+        type: string
+    - name: activity.contact
+      in: query
+      description: |-
+        Number of contacts with brokers.
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: activity.detail
+      in: query
+      description: |-
+        Number of visits of listing details.
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: activity.home
+      in: query
+      description: |-
+        Number of visits of the home page.
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: activity.news
+      in: query
+      description: |-
+        Number of visits of the news page.
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: activity.picture
+      in: query
+      description: |-
+        Number of listing pictures viewed.
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: activity.search
+      in: query
+      description: |-
+        Number of searches performed.
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: activity.vr_tour
+      in: query
+      description: |-
+        Number of VR tours taken.
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.costs.rental_price.min
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.costs.rental_price.max
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.costs.rental_price.sum
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.costs.sales_price.min
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.costs.sales_price.max
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.costs.sales_price.sum
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.listing.building.construction_year.min
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.listing.building.construction_year.max
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.listing.building.construction_year.sum
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.listing.condition.GOODCONDITION.sum
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.listing.condition.PERFECTCONDITION.sum
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.listing.condition.TORENOVATE.sum
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.listing.coordinates.lon.min
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.listing.coordinates.lon.max
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.listing.coordinates.lon.sum
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.listing.coordinates.lat.min
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.listing.coordinates.lat.max
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.listing.coordinates.lat.sum
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.listing.rooms.bathrooms.min
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.listing.rooms.bathrooms.max
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.listing.rooms.bathrooms.sum
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.listing.rooms.bedrooms.count.min
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.listing.rooms.bedrooms.count.max
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.listing.rooms.bedrooms.count.sum
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.surface.living.min
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.surface.living.max
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.surface.living.sum
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.surface.plot.min
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.surface.plot.max
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.surface.plot.sum
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.offering.type.RENT.sum
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: profile.original.offering.type.SALE.sum
+      in: query
+      description: |-
+        Use comma for ranges:
+        "3,8": between 3 and 8 included,
+        "3,": 3 or more,
+        ",8": 8 or less.
+      schema:
+        type: string
+    - name: customer_id
+      in: query
+      description: The customer's id to apply the request to
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/UserQueryResponse.yaml
+    '401':
+      description: Invalid JWT token
+      content: {}
+    '403':
+      description: Invalid customer_type for this client
+      content: {}
+  security:
+    - api_key: []
+      jwt: []
