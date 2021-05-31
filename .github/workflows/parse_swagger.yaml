@@ -20,7 +20,7 @@ jobs:
         run: |
           npm run build
       - name: git actions
-      - run: |
+        run: |
           git add .
           git commit -m "adding html"
           git push
