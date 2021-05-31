@@ -19,4 +19,8 @@ jobs:
       - name: build-html
         run: |
           npm run build
-
+      - name: git actions
+      - run: |
+          git add .
+          git commit -m "adding html"
+          git push
