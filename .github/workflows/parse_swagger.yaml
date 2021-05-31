@@ -1,0 +1,22 @@
+name: Parse swagger on push
+on:
+  push:
+    branches:
+      - main
+jobs:
+  parse-swagger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: setup-node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: install
+        run: |
+          npm install
+      - name: build-html
+        run: |
+          npm run build
+
